@@ -252,7 +252,7 @@ var NextScript = exports.NextScript = function (_Component4) {
       return _react2.default.createElement(
         'div',
         null,
-        staticMarkup ? null : _react2.default.createElement('script', { async: true, dangerouslySetInnerHTML: {
+        staticMarkup ? null : _react2.default.createElement('script', { dangerouslySetInnerHTML: {
             __html: '\n          __NEXT_DATA__ = ' + (0, _htmlescape2.default)(__NEXT_DATA__) + '\n          module={}\n          __NEXT_LOADED_PAGES__ = []\n\n          __NEXT_REGISTER_PAGE = function (route, fn) {\n            __NEXT_LOADED_PAGES__.push({ route: route, fn: fn })\n          }\n        '
           } }),
         _react2.default.createElement('script', { async: true, type: 'text/javascript', src: assetPrefix + '/_next/' + buildId + '/page' + pathname }),
