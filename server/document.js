@@ -137,7 +137,7 @@ export class NextScript extends Component {
     const { pathname, buildId, assetPrefix } = __NEXT_DATA__
 
     return <div>
-      {staticMarkup ? null : <script dangerouslySetInnerHTML={{
+      {staticMarkup ? null : <script async dangerouslySetInnerHTML={{
         __html: `
           __NEXT_DATA__ = ${htmlescape(__NEXT_DATA__)}
           module={}

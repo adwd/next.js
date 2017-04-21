@@ -32,6 +32,13 @@ export default class Server {
     this.hotReloader = dev ? new HotReloader(this.dir, { quiet }) : null
     this.http = null
     this.config = getConfig(this.dir)
+    console.log(this.config)
+    /*
+     { webpack: null,
+       poweredByHeader: true,
+       distDir: '.next',
+       assetPrefix: '' }
+     */
     this.dist = this.config.distDir
     this.buildStats = !dev ? require(join(this.dir, this.dist, 'build-stats.json')) : null
     this.buildId = !dev ? this.readBuildId() : '-'
@@ -92,10 +99,24 @@ export default class Server {
     }
   }
 
+  // routingを定義する
+  // GETメソッドで静的に配信するファイル
+  // _next-prefetcher.js
+  // /_next/:hash/{manifest,main,commons,app}.js
+  // /_next/:buildId/page/_error
+  // /_next/:path+
+  // /static/:path+
+  //
+  // 動的にハンドリングする
+  // /_next/:buildId/page/:path*
+  // /:path*
+
   defineRoutes () {
     const routes = {
       '/_next-prefetcher.js': async (req, res, params) => {
         const p = join(__dirname, '../client/next-prefetcher-bundle.js')
+        const exists = fs.existsSync('../client/next-prefetcher-bundle.js')
+        console.log('../client/next-prefetcher-bundle.js exists: ', exists)
         await this.serveStatic(req, res, p)
       },
 
@@ -139,6 +160,8 @@ export default class Server {
         const paths = params.path || ['']
         const page = `/${paths.join('/')}`
 
+        console.log('route /_next/:buildId/page/:path*', paths, page)
+
         if (!this.handleBuildId(params.buildId, res)) {
           const error = new Error('INVALID_BUILD_ID')
           const customFields = { buildIdMismatched: true }
@@ -175,6 +198,7 @@ export default class Server {
 
       '/:path*': async (req, res, params, parsedUrl) => {
         const { pathname, query } = parsedUrl
+        console.log('route: /:path*', pathname, query)
         await this.render(req, res, pathname, query)
       }
     }

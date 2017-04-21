@@ -26,15 +26,26 @@ const interpolateNames = new Map(defaultPages.map((p) => {
 
 const relativeResolve = rootModuleRelativePath(require)
 
+// TODO: ちゃんと読む
+
 export default async function createCompiler (dir, { dev = false, quiet = false, buildDir } = {}) {
   dir = resolve(dir)
   const config = getConfig(dir)
+  /* config
+   { webpack: null,
+     poweredByHeader: true,
+     distDir: 'build',
+     assetPrefix: '' }
+   */
   const defaultEntries = dev ? [
     join(__dirname, '..', '..', 'client', 'webpack-hot-middleware-client'),
     join(__dirname, '..', '..', 'client', 'on-demand-entries-client')
   ] : []
   const mainJS = dev
     ? require.resolve('../../client/next-dev') : require.resolve('../../client/next')
+
+  // defaultEntries []
+  // mainJS /Users/foo/../next.js/dist/client/next.js
 
   let totalPages
 
@@ -48,6 +59,11 @@ export default async function createCompiler (dir, { dev = false, quiet = false,
 
     const pages = await glob('pages/**/*.js', { cwd: dir })
     const devPages = pages.filter((p) => p === 'pages/_document.js' || p === 'pages/_error.js')
+
+    console.log('pages', pages)
+    console.log('devPages', devPages)
+    // pages [ 'pages/about.js', 'pages/index.js' ]
+    // devPages []
 
     // In the dev environment, on-demand-entry-handler will take care of
     // managing pages.

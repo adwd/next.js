@@ -7,7 +7,15 @@ import Server from '../server'
 import { printAndExit } from '../lib/utils'
 import pkgUp from 'pkg-up'
 
+// process.env.NODE_ENV が指定されていなかったら development にする
+// next dev dir --help だったらヘルプを表示して終了
+// 指定された dir が存在しなかったら終了
+// pages ディレクトリが存在しなかったら終了
+// /server/index.js を実行する
+
 process.env.NODE_ENV = process.env.NODE_ENV || 'development'
+
+console.log('process.argv.slice(2)', process.argv.slice(2))
 
 const argv = parseArgs(process.argv.slice(2), {
   alias: {
@@ -19,6 +27,9 @@ const argv = parseArgs(process.argv.slice(2), {
     p: 3000
   }
 })
+
+console.log('argv', argv)
+// argv { _: [], h: false, help: false, p: 3000, port: 3000 }
 
 if (argv.help) {
   console.log(`
@@ -57,21 +68,21 @@ if (!existsSync(join(dir, 'pages'))) {
 
 const srv = new Server({ dir, dev: true })
 srv.start(argv.port)
-.then(async () => {
-  if (!process.env.NOW) {
-    console.log(`> Ready on http://localhost:${argv.port}`)
-  }
-})
-.catch((err) => {
-  if (err.code === 'EADDRINUSE') {
-    let errorMessage = `Port ${argv.port} is already in use.`
-    const pkgAppPath = pkgUp.sync('.')
-    const appPackage = JSON.parse(readFileSync(pkgAppPath, 'utf8'))
-    const nextScript = Object.entries(appPackage.scripts).find(scriptLine => scriptLine[1] === 'next')
-    if (nextScript) errorMessage += `\nUse \`npm run ${nextScript[0]} -- -p <some other port>\`.`
-    console.error(errorMessage)
-  } else {
-    console.error(err)
-  }
-  process.nextTick(() => process.exit(1))
-})
+  .then(async () => {
+    if (!process.env.NOW) {
+      console.log(`> Ready on http://localhost:${argv.port}`)
+    }
+  })
+  .catch((err) => {
+    if (err.code === 'EADDRINUSE') {
+      let errorMessage = `Port ${argv.port} is already in use.`
+      const pkgAppPath = pkgUp.sync('.')
+      const appPackage = JSON.parse(readFileSync(pkgAppPath, 'utf8'))
+      const nextScript = Object.entries(appPackage.scripts).find(scriptLine => scriptLine[1] === 'next')
+      if (nextScript) errorMessage += `\nUse \`npm run ${nextScript[0]} -- -p <some other port>\`.`
+      console.error(errorMessage)
+    } else {
+      console.error(err)
+    }
+    process.nextTick(() => process.exit(1))
+  })

@@ -1,3 +1,6 @@
 export default () => (
-  <div>About us</div>
+  <div>
+    About us
+    <img src='static/images/rebuild.png' />
+  </div>
 )

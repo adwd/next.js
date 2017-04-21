@@ -5,6 +5,11 @@ import parseArgs from 'minimist'
 import build from '../server/build'
 import { printAndExit } from '../lib/utils'
 
+// process.env.NODE_ENV が設定されていなかったら production にする
+// next build --help だったらヘルプを表示して終了
+// next build dir の dir, dir/pages が存在しなかったら終了
+// /server/build/index.js を実行
+
 process.env.NODE_ENV = process.env.NODE_ENV || 'production'
 
 const argv = parseArgs(process.argv.slice(2), {
@@ -45,7 +50,7 @@ if (!existsSync(join(dir, 'pages'))) {
 }
 
 build(dir)
-.catch((err) => {
-  console.error(err)
-  process.exit(1)
-})
+  .catch((err) => {
+    console.error(err)
+    process.exit(1)
+  })

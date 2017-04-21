@@ -6,6 +6,11 @@ import Server from '../server'
 import { existsSync } from 'fs'
 import getConfig from '../server/config'
 
+// process.env.NODE_ENV が設定されていなかったら production にする
+// next start --help だったらヘルプを表示して終了
+// next buildを実行したファイルがなかったら終了
+// /server/build/index.js の Server クラスを作って実行
+
 process.env.NODE_ENV = process.env.NODE_ENV || 'production'
 
 const argv = parseArgs(process.argv.slice(2), {
@@ -18,6 +23,9 @@ const argv = parseArgs(process.argv.slice(2), {
   string: ['H'],
   default: { p: 3000 }
 })
+
+console.log('next-start argv', argv)
+// argv { _: [], h: false, help: false, p: 3000, port: 3000 }
 
 if (argv.hostname === '') {
   console.error(`> Provided hostname argument has no value`)
@@ -49,6 +57,8 @@ if (argv.help) {
 const dir = resolve(argv._[0] || '.')
 const dist = getConfig(dir).distDir
 
+console.log('dist', dist)
+
 const srv = new Server({ dir })
 
 if (!existsSync(resolve(dir, dist, 'BUILD_ID'))) {
@@ -57,12 +67,12 @@ if (!existsSync(resolve(dir, dist, 'BUILD_ID'))) {
 }
 
 srv.start(argv.port, argv.hostname)
-.then(() => {
-  if (!process.env.NOW) {
-    console.log(`> Ready on http://${argv.hostname ? argv.hostname : 'localhost'}:${argv.port}`)
-  }
-})
-.catch((err) => {
-  console.error(err)
-  process.exit(1)
-})
+  .then(() => {
+    if (!process.env.NOW) {
+      console.log(`> Ready on http://${argv.hostname ? argv.hostname : 'localhost'}:${argv.port}`)
+    }
+  })
+  .catch((err) => {
+    console.error(err)
+    process.exit(1)
+  })

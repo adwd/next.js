@@ -7,9 +7,21 @@ import webpack from './webpack'
 import replaceCurrentBuild from './replace'
 import md5File from 'md5-file/promise'
 
+// プロジェクトのパスとtmpディレクトリを引数にしてwebpackコンパイルを実行する
+// webpack のchunk からハッシュを得られないので、自分で計算して build-stats.jsonに書いておく
+// BUILD_ID ファイルにビルドIDを書いておく
+// tmpディレクトリにあるビルドされたファイルをdirに移動する
+// tmpディレクトリを削除する
+
 export default async function build (dir) {
   const buildDir = join(tmpdir(), uuid.v4())
   const compiler = await webpack(dir, { buildDir })
+
+  console.log('dir', dir)
+  // /Users/foo/work/../next.js/examples/hello-world
+  console.log('buildDir', buildDir)
+  // /var/folders/yk/0kqj_0yx61j66w6z97twplz9t82_y5/T/13193135-bd3b-4b3f-a3ba-ca3fb9c8bce0
+  // console.log('compiler', compiler)
 
   try {
     await runCompiler(compiler)
@@ -32,6 +44,9 @@ function runCompiler (compiler) {
       if (err) return reject(err)
 
       const jsonStats = stats.toJson()
+
+      // console.log('stats', stats)
+      // console.log('jsonStats', jsonStats)
 
       if (jsonStats.errors.length > 0) {
         const error = new Error(jsonStats.errors[0])

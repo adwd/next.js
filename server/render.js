@@ -108,6 +108,59 @@ async function doRender (req, res, pathname, query, {
 }
 
 export async function renderScript (req, res, page, opts) {
+  console.log('renderScript', page, opts)
+  /*
+   / { dev: true,
+   staticMarkup: false,
+   dir: '/Users/foo/../next.js/examples/hello-world',
+   hotReloader:
+   HotReloader {
+     dir: '/Users/foo/../next.js/examples/hello-world',
+     quiet: false,
+     middlewares: [ [Object], [Object], [Function] ],
+     webpackDevMiddleware:
+       { [Function: webpackDevMiddleware]
+       getFilenameFromUrl: [Function: bound getFilenameFromUrl],
+       waitUntilValid: [Function: waitUntilValid],
+       invalidate: [Function: invalidate],
+       close: [Function: close],
+       fileSystem: [Object] },
+       webpackHotMiddleware: { [Function: middleware] publish: [Function: publish] },
+     initialized: true,
+     stats:
+       Stats {
+         compilation: [Object],
+         hash: 'd3040fec7a971d92c64f',
+         startTime: 1492577423414,
+         endTime: 1492577425767 },
+     compilationErrors: Map { _c: Map {} },
+     prevAssets:
+       { 'dist/pages/_document.js': [Object],
+       'dist/pages/_error.js': [Object],
+       'dist/pages/index.js': [Object],
+       'commons.js': [Object],
+       'main.js': [Object],
+       'bundles/pages/_error.js': [Object],
+       'bundles/pages/_document.js': [Object],
+       'manifest.js': [Object],
+       'bundles/pages/index.js': [Object],
+       '0.7599f3af8a0b24a6d8d6.hot-update.js': [Object],
+       '7599f3af8a0b24a6d8d6.hot-update.json': [Object] },
+     prevChunkNames: Set { _c: [Object] },
+     prevFailedChunkNames: Set { _c: Set {} },
+     prevChunkHashes: Map { _c: [Object] },
+     config:
+       { webpack: null,
+       poweredByHeader: true,
+       distDir: 'build',
+       assetPrefix: '' },
+     onDemandEntries:
+       { ensurePage: [Function: ensurePage],
+       middleware: [Function: middleware] } },
+       buildStats: null,
+       buildId: '-',
+       assetPrefix: '' }
+   */
   try {
     const path = join(opts.dir, '.next', 'bundles', 'pages', page)
     const realPath = await resolvePath(path)
@@ -190,6 +243,8 @@ function errorToJSON (err) {
 
 export function serveStatic (req, res, path) {
   return new Promise((resolve, reject) => {
+    console.log('serveStatic', path)
+    // /Users/foo/../next.js/examples/hello-world/static/images/rebuild.png
     send(req, path)
     .on('directory', () => {
       // We don't allow directories to be read.
