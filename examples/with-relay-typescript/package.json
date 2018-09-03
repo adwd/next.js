@@ -2,19 +2,30 @@
   "name": "with-relay-typescript",
   "version": "1.0.0",
   "scripts": {
-    "dev": "next",
+    "dev": "node server.js",
     "build": "next build",
-    "start": "next start"
+    "start": "NODE_ENV=production node server.js",
+    "relay": "relay-compiler --src ./ --schema ./schema.graphql --language typescript"
   },
   "dependencies": {
     "@zeit/next-typescript": "1.1.0",
+    "express": "^4.16.3",
+    "express-graphql": "^0.6.12",
+    "graphql": "^14.0.0",
+    "isomorphic-unfetch": "^2.1.1",
     "next": "latest",
     "react": "^16.4.2",
-    "react-dom": "^16.4.2"
+    "react-dom": "^16.4.2",
+    "react-relay": "^1.6.2"
   },
   "devDependencies": {
     "@types/next": "latest",
-    "@types/react": "^16.4.13"
+    "@types/react": "^16.4.13",
+    "@types/react-relay": "^1.3.9",
+    "babel-plugin-relay": "^1.6.2",
+    "relay-compiler": "^1.7.0-rc.1",
+    "relay-compiler-language-typescript": "^1.1.0",
+    "typescript": "^3.0.3"
   },
   "license": "ISC"
 }

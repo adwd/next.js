@@ -1,9 +1,23 @@
-import Link from 'next/link'
+import React from 'react';
+// import withData from 'lib/with-data';
+// import { graphql } from 'react-relay';
+import { Todos } from '../components/Todos';
+// import Link from 'next/link'
 
-export default () =>
+const Index = () => (
   <div>
-    Hello World.{' '}
-    <Link href="/about">
-      <a>About</a>
-    </Link>
+    <Todos />
   </div>
+);
+
+export default Index;
+
+// export default withData(Index, {
+//   query: graphql`
+//         query pages_indexQuery {
+//             viewer {
+//                 ...BlogPosts_viewer
+//             }
+//         }
+//     `
+// })
